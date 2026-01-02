@@ -83,6 +83,13 @@ jobs:
           NEXT_PUBLIC_FIREBASE_APP_ID: ${{ secrets.NEXT_PUBLIC_FIREBASE_APP_ID }}
           NEXT_PUBLIC_ENTRA_TENANT_ID: ${{ secrets.NEXT_PUBLIC_ENTRA_TENANT_ID }}
 
+      - name: Enable webframeworks experiment
+        uses: w9jds/firebase-action@master
+        with:
+          args: experiments:enable webframeworks
+        env:
+          GCP_SA_KEY: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+
       - name: Deploy to Firebase Hosting
         uses: w9jds/firebase-action@master
         with:
