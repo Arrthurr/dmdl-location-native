@@ -1,0 +1,52 @@
+{
+  "name": "@dmdl/mobile",
+  "version": "1.0.0",
+  "main": "expo-router/entry",
+  "scripts": {
+    "start": "expo start",
+    "dev": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web",
+    "lint": "eslint . --ext .ts,.tsx",
+    "typecheck": "tsc --noEmit",
+    "test": "jest"
+  },
+  "dependencies": {
+    "@dmdl/shared": "*",
+    "@expo/vector-icons": "^14.0.4",
+    "@react-navigation/native": "^7.0.14",
+    "expo": "~52.0.0",
+    "expo-auth-session": "~6.0.3",
+    "expo-background-fetch": "~13.0.3",
+    "expo-constants": "~17.0.3",
+    "expo-crypto": "~14.0.1",
+    "expo-linking": "~7.0.3",
+    "expo-location": "~18.0.4",
+    "expo-notifications": "~0.29.11",
+    "expo-router": "~4.0.14",
+    "expo-secure-store": "~14.0.0",
+    "expo-status-bar": "~2.0.0",
+    "expo-task-manager": "~12.0.3",
+    "expo-web-browser": "~14.0.1",
+    "firebase": "^10.14.1",
+    "react": "18.3.1",
+    "react-native": "0.76.5",
+    "react-native-safe-area-context": "4.12.0",
+    "react-native-screens": "~4.4.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.25.2",
+    "@types/jest": "^29.5.12",
+    "@types/react": "~18.3.12",
+    "@typescript-eslint/eslint-plugin": "^8.10.0",
+    "@typescript-eslint/parser": "^8.10.0",
+    "eslint": "^9.12.0",
+    "eslint-plugin-react": "^7.37.0",
+    "eslint-plugin-react-hooks": "^5.0.0",
+    "jest": "^29.7.0",
+    "jest-expo": "~52.0.2",
+    "typescript": "~5.6.3"
+  },
+  "private": true
+}

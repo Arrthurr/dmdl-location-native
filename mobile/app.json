@@ -1,0 +1,71 @@
+{
+  "expo": {
+    "name": "DMDL Locator",
+    "slug": "dmdl-locator",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "scheme": "dmdl-locator",
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#1a56db"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.dmdl.locator",
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "DMDL Locator needs access to your location to verify check-ins at school locations.",
+        "NSLocationAlwaysAndWhenInUseUsageDescription": "DMDL Locator needs background location access to automatically check you out when you leave a school.",
+        "UIBackgroundModes": ["location", "fetch", "remote-notification"]
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#1a56db"
+      },
+      "edgeToEdgeEnabled": true,
+      "package": "com.dmdl.locator",
+      "permissions": [
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION",
+        "ACCESS_BACKGROUND_LOCATION",
+        "FOREGROUND_SERVICE",
+        "RECEIVE_BOOT_COMPLETED"
+      ]
+    },
+    "web": {
+      "favicon": "./assets/favicon.png",
+      "bundler": "metro"
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "DMDL Locator needs background location access to automatically check you out when you leave a school.",
+          "locationWhenInUsePermission": "DMDL Locator needs access to your location to verify check-ins at school locations.",
+          "isAndroidBackgroundLocationEnabled": true
+        }
+      ],
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/notification-icon.png",
+          "color": "#1a56db"
+        }
+      ]
+    ],
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "your-project-id"
+      }
+    }
+  }
+}

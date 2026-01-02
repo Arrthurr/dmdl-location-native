@@ -1,0 +1,30 @@
+{
+  "name": "dmdl-location-native",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "mobile",
+    "web",
+    "functions",
+    "shared"
+  ],
+  "scripts": {
+    "dev:mobile": "npm run dev --workspace=mobile",
+    "dev:web": "npm run dev --workspace=web",
+    "build:web": "npm run build --workspace=web",
+    "build:functions": "npm run build --workspace=functions",
+    "build:shared": "npm run build --workspace=shared",
+    "lint": "npm run lint --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "deploy:functions": "firebase deploy --only functions",
+    "deploy:hosting": "firebase deploy --only hosting",
+    "deploy": "firebase deploy"
+  },
+  "devDependencies": {
+    "turbo": "^2.3.3"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

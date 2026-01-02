@@ -1,0 +1,97 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function getUserData() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+    }
+
+    function isAdmin() {
+      return isAuthenticated() && getUserData().role == 'administrator';
+    }
+
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    function isActiveUser() {
+      return isAuthenticated() && getUserData().isActive == true;
+    }
+
+    // Users collection
+    match /users/{userId} {
+      // Any authenticated user can read user profiles
+      allow read: if isAuthenticated();
+
+      // Only admins can create or delete users
+      allow create, delete: if isAdmin();
+
+      // Admins can update any user
+      // Users can update their own profile but not change their role
+      allow update: if isAdmin() ||
+        (isOwner(userId) &&
+         request.resource.data.role == resource.data.role);
+    }
+
+    // Schools collection
+    match /schools/{schoolId} {
+      // Any authenticated user can read schools
+      allow read: if isAuthenticated();
+
+      // Only admins can write schools
+      allow write: if isAdmin();
+    }
+
+    // Schedules collection
+    match /schedules/{scheduleId} {
+      // Any authenticated user can read schedules
+      allow read: if isAuthenticated();
+
+      // Only admins can write schedules
+      allow write: if isAdmin();
+    }
+
+    // Assignments collection (provider-school assignments)
+    match /assignments/{assignmentId} {
+      // Admins can read all assignments
+      // Providers can only read their own assignments
+      allow read: if isAdmin() ||
+        (isAuthenticated() && resource.data.providerId == request.auth.uid);
+
+      // Only admins can write assignments
+      allow write: if isAdmin();
+    }
+
+    // Sessions collection
+    match /sessions/{sessionId} {
+      // Admins can read all sessions
+      // Users can only read their own sessions
+      allow read: if isAdmin() ||
+        (isAuthenticated() && resource.data.userId == request.auth.uid);
+
+      // Sessions are created via Cloud Functions
+      // Allow create for authenticated users (validated in function)
+      allow create: if isAuthenticated() &&
+        request.resource.data.userId == request.auth.uid;
+
+      // Users can update their own sessions (for notes)
+      // Admins can update any session
+      allow update: if isAdmin() ||
+        (isAuthenticated() && resource.data.userId == request.auth.uid);
+
+      // Only admins can delete sessions
+      allow delete: if isAdmin();
+
+      // Location checks subcollection
+      match /locationChecks/{checkId} {
+        allow read, write: if isAuthenticated() &&
+          get(/databases/$(database)/documents/sessions/$(sessionId)).data.userId == request.auth.uid;
+      }
+    }
+  }
+}
