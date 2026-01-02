@@ -83,6 +83,11 @@ jobs:
           NEXT_PUBLIC_FIREBASE_APP_ID: ${{ secrets.NEXT_PUBLIC_FIREBASE_APP_ID }}
           NEXT_PUBLIC_ENTRA_TENANT_ID: ${{ secrets.NEXT_PUBLIC_ENTRA_TENANT_ID }}
 
+      - name: Copy shared package for Firebase
+        run: |
+          mkdir -p web/node_modules/@dmdl
+          cp -r shared web/node_modules/@dmdl/
+
       - name: Enable webframeworks experiment
         uses: w9jds/firebase-action@master
         with:
