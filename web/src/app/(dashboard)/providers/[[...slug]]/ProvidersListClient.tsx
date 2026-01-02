@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Search, UserPlus, MoreVertical, Mail, AlertCircle } from 'lucide-react';
 
-export default function ProvidersPage() {
+export default function ProvidersListClient() {
   const { providers, isLoading, error, deactivateProvider, activateProvider } =
     useProviders();
   const [searchQuery, setSearchQuery] = useState('');

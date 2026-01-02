@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { useProvider, useProviders } from '@/hooks/useProviders';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -9,10 +9,12 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ArrowLeft, Save, AlertCircle } from 'lucide-react';
 
-export default function EditProviderPage() {
-  const params = useParams();
+interface EditProviderClientProps {
+  providerId: string;
+}
+
+export default function EditProviderClient({ providerId }: EditProviderClientProps) {
   const router = useRouter();
-  const providerId = params.id as string;
 
   const { provider, isLoading, error } = useProvider(providerId);
   const { updateProvider } = useProviders();

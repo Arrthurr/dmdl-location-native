@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { useSchool, useSchools } from '@/hooks/useSchools';
 import { DEFAULT_CHECK_IN_RADIUS_METERS } from '@dmdl/shared';
 import { Button } from '@/components/ui/button';
@@ -10,10 +10,12 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ArrowLeft, Save, MapPin, AlertCircle } from 'lucide-react';
 
-export default function EditSchoolPage() {
-  const params = useParams();
+interface EditSchoolClientProps {
+  schoolId: string;
+}
+
+export default function EditSchoolClient({ schoolId }: EditSchoolClientProps) {
   const router = useRouter();
-  const schoolId = params.id as string;
 
   const { school, isLoading, error } = useSchool(schoolId);
   const { updateSchool } = useSchools();
@@ -115,7 +117,6 @@ export default function EditSchoolPage() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
       <div className="flex items-center gap-4">
         <Button variant="ghost" onClick={() => router.back()} className="gap-2">
           <ArrowLeft className="h-4 w-4" />
@@ -127,7 +128,6 @@ export default function EditSchoolPage() {
         </div>
       </div>
 
-      {/* Form */}
       <Card>
         <CardHeader>
           <CardTitle>School Information</CardTitle>
@@ -145,9 +145,7 @@ export default function EditSchoolPage() {
               <Input
                 id="name"
                 value={formData.name}
-                onChange={(e) =>
-                  setFormData({ ...formData, name: e.target.value })
-                }
+                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 required
               />
             </div>
@@ -157,9 +155,7 @@ export default function EditSchoolPage() {
               <Input
                 id="address"
                 value={formData.address}
-                onChange={(e) =>
-                  setFormData({ ...formData, address: e.target.value })
-                }
+                onChange={(e) => setFormData({ ...formData, address: e.target.value })}
                 required
               />
             </div>
@@ -172,9 +168,7 @@ export default function EditSchoolPage() {
                   type="number"
                   step="any"
                   value={formData.latitude}
-                  onChange={(e) =>
-                    setFormData({ ...formData, latitude: e.target.value })
-                  }
+                  onChange={(e) => setFormData({ ...formData, latitude: e.target.value })}
                   required
                 />
               </div>
@@ -185,17 +179,14 @@ export default function EditSchoolPage() {
                   type="number"
                   step="any"
                   value={formData.longitude}
-                  onChange={(e) =>
-                    setFormData({ ...formData, longitude: e.target.value })
-                  }
+                  onChange={(e) => setFormData({ ...formData, longitude: e.target.value })}
                   required
                 />
               </div>
             </div>
             <p className="text-xs text-gray-500 flex items-center gap-1">
               <MapPin className="h-3 w-3" />
-              You can find coordinates by searching for the address on Google
-              Maps
+              You can find coordinates by searching for the address on Google Maps
             </p>
 
             <div className="space-y-2">
@@ -204,9 +195,7 @@ export default function EditSchoolPage() {
                 id="radius"
                 type="number"
                 value={formData.checkInRadiusMeters}
-                onChange={(e) =>
-                  setFormData({ ...formData, checkInRadiusMeters: e.target.value })
-                }
+                onChange={(e) => setFormData({ ...formData, checkInRadiusMeters: e.target.value })}
               />
               <p className="text-xs text-gray-500">
                 Providers must be within this distance to check in.
@@ -214,11 +203,7 @@ export default function EditSchoolPage() {
             </div>
 
             <div className="flex gap-3 pt-4">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => router.back()}
-              >
+              <Button type="button" variant="outline" onClick={() => router.back()}>
                 Cancel
               </Button>
               <Button type="submit" disabled={isSaving} className="gap-2">

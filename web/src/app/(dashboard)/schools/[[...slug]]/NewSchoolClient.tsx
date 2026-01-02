@@ -10,7 +10,7 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ArrowLeft, Save, MapPin } from 'lucide-react';
 
-export default function NewSchoolPage() {
+export default function NewSchoolClient() {
   const router = useRouter();
   const { addSchool } = useSchools();
 
@@ -70,7 +70,6 @@ export default function NewSchoolPage() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
       <div className="flex items-center gap-4">
         <Button variant="ghost" onClick={() => router.back()} className="gap-2">
           <ArrowLeft className="h-4 w-4" />
@@ -82,7 +81,6 @@ export default function NewSchoolPage() {
         </div>
       </div>
 
-      {/* Form */}
       <Card>
         <CardHeader>
           <CardTitle>School Information</CardTitle>
@@ -100,9 +98,7 @@ export default function NewSchoolPage() {
               <Input
                 id="name"
                 value={formData.name}
-                onChange={(e) =>
-                  setFormData({ ...formData, name: e.target.value })
-                }
+                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 placeholder="e.g., Lincoln Elementary School"
                 required
               />
@@ -113,9 +109,7 @@ export default function NewSchoolPage() {
               <Input
                 id="address"
                 value={formData.address}
-                onChange={(e) =>
-                  setFormData({ ...formData, address: e.target.value })
-                }
+                onChange={(e) => setFormData({ ...formData, address: e.target.value })}
                 placeholder="e.g., 123 Main St, City, State 12345"
                 required
               />
@@ -129,9 +123,7 @@ export default function NewSchoolPage() {
                   type="number"
                   step="any"
                   value={formData.latitude}
-                  onChange={(e) =>
-                    setFormData({ ...formData, latitude: e.target.value })
-                  }
+                  onChange={(e) => setFormData({ ...formData, latitude: e.target.value })}
                   placeholder="e.g., 37.7749"
                   required
                 />
@@ -143,9 +135,7 @@ export default function NewSchoolPage() {
                   type="number"
                   step="any"
                   value={formData.longitude}
-                  onChange={(e) =>
-                    setFormData({ ...formData, longitude: e.target.value })
-                  }
+                  onChange={(e) => setFormData({ ...formData, longitude: e.target.value })}
                   placeholder="e.g., -122.4194"
                   required
                 />
@@ -153,8 +143,7 @@ export default function NewSchoolPage() {
             </div>
             <p className="text-xs text-gray-500 flex items-center gap-1">
               <MapPin className="h-3 w-3" />
-              You can find coordinates by searching for the address on Google
-              Maps
+              You can find coordinates by searching for the address on Google Maps
             </p>
 
             <div className="space-y-2">
@@ -163,9 +152,7 @@ export default function NewSchoolPage() {
                 id="radius"
                 type="number"
                 value={formData.checkInRadiusMeters}
-                onChange={(e) =>
-                  setFormData({ ...formData, checkInRadiusMeters: e.target.value })
-                }
+                onChange={(e) => setFormData({ ...formData, checkInRadiusMeters: e.target.value })}
                 placeholder="150"
               />
               <p className="text-xs text-gray-500">
@@ -175,11 +162,7 @@ export default function NewSchoolPage() {
             </div>
 
             <div className="flex gap-3 pt-4">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => router.back()}
-              >
+              <Button type="button" variant="outline" onClick={() => router.back()}>
                 Cancel
               </Button>
               <Button type="submit" disabled={isSaving} className="gap-2">
