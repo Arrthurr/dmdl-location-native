@@ -9,7 +9,6 @@ import {
   limit,
   onSnapshot,
   Timestamp,
-  startAfter,
   getDocs,
 } from 'firebase/firestore';
 import { db } from '@/lib/firebase';

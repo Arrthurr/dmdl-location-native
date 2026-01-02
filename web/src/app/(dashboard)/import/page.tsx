@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState } from 'react';
 import { collection, addDoc, serverTimestamp, GeoPoint } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { COLLECTIONS, DEFAULT_CHECK_IN_RADIUS_METERS } from '@dmdl/shared';

@@ -8,16 +8,12 @@ import { DAYS_OF_WEEK, DayOfWeek } from '@dmdl/shared';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   Plus,
-  Calendar,
   Clock,
-  Trash2,
   AlertCircle,
   X,
-  Search,
 } from 'lucide-react';
 
 export default function SchedulesPage() {
@@ -27,9 +23,6 @@ export default function SchedulesPage() {
   const { schools } = useSchools();
 
   const [showAddModal, setShowAddModal] = useState(false);
-  const [selectedProvider, setSelectedProvider] = useState('');
-  const [selectedSchool, setSelectedSchool] = useState('');
-  const [searchQuery, setSearchQuery] = useState('');
   const [filterProvider, setFilterProvider] = useState('');
   const [filterSchool, setFilterSchool] = useState('');
   const [newSchedule, setNewSchedule] = useState({

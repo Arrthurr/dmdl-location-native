@@ -9,7 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { Search, Building2, MapPin, Plus, AlertCircle } from 'lucide-react';
 
 export default function SchoolsPage() {
-  const { schools, isLoading, error, deactivateSchool } = useSchools();
+  const { schools, isLoading, error, deactivateSchool: _deactivateSchool } = useSchools();
   const [searchQuery, setSearchQuery] = useState('');
   const [showInactive, setShowInactive] = useState(false);
 

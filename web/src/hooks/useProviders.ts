@@ -9,10 +9,7 @@ import {
   onSnapshot,
   doc,
   updateDoc,
-  deleteDoc,
-  addDoc,
   serverTimestamp,
-  getDoc,
 } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { User, COLLECTIONS } from '@dmdl/shared';

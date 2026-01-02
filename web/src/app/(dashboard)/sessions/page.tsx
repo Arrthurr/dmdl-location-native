@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState } from 'react';
 import { useSessions } from '@/hooks/useSessions';
 import { useProviders } from '@/hooks/useProviders';
 import { useSchools } from '@/hooks/useSchools';
@@ -15,7 +15,6 @@ import {
   Calendar,
   AlertCircle,
   Filter,
-  X,
 } from 'lucide-react';
 
 export default function SessionsPage() {

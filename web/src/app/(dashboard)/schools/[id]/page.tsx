@@ -21,7 +21,6 @@ import {
   ArrowLeft,
   MapPin,
   Calendar,
-  Clock,
   Edit,
   Building2,
   AlertCircle,

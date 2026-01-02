@@ -1,6 +1,5 @@
 'use client';
 
-import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -39,7 +38,7 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   const { user, isLoading, isAdmin, signOut } = useAuth();
-  const router = useRouter();
+  const _router = useRouter();
   const pathname = usePathname();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
