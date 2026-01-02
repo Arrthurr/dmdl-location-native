@@ -13,7 +13,7 @@ export default function LoginPage() {
 
   // Redirect if already logged in
   if (!isLoading && user) {
-    router.replace('/dashboard');
+    router.replace('/');
     return null;
   }
 
@@ -23,7 +23,7 @@ export default function LoginPage() {
 
     try {
       await signIn();
-      router.replace('/dashboard');
+      router.replace('/');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Sign in failed');
     } finally {

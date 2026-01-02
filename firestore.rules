@@ -28,8 +28,12 @@ service cloud.firestore {
       // Any authenticated user can read user profiles
       allow read: if isAuthenticated();
 
-      // Only admins can create or delete users
-      allow create, delete: if isAdmin();
+      // Users can create their own document on first sign-in
+      // Admins can create any user
+      allow create: if isOwner(userId) || isAdmin();
+
+      // Only admins can delete users
+      allow delete: if isAdmin();
 
       // Admins can update any user
       // Users can update their own profile but not change their role
