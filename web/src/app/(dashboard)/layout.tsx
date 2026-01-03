@@ -18,7 +18,7 @@ import {
   X,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 
 const navigation = [
@@ -38,25 +38,25 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   const { user, isLoading, isAdmin, signOut } = useAuth();
-  const _router = useRouter();
+  const router = useRouter();
   const pathname = usePathname();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  // TODO: Re-enable auth redirects after Firebase is configured
-  // useEffect(() => {
-  //   if (!isLoading && !user) {
-  //     router.replace('/login');
-  //   }
-  // }, [user, isLoading, router]);
+  // Redirect to login if not authenticated
+  useEffect(() => {
+    if (!isLoading && !user) {
+      router.replace('/login');
+    }
+  }, [user, isLoading, router]);
 
-  // useEffect(() => {
-  //   if (!isLoading && user && !isAdmin) {
-  //     // Non-admin users can only access the check-in page
-  //     if (pathname !== '/check-in') {
-  //       router.replace('/check-in');
-  //     }
-  //   }
-  // }, [user, isLoading, isAdmin, pathname, router]);
+  // Non-admin users can only access the check-in page
+  useEffect(() => {
+    if (!isLoading && user && !isAdmin) {
+      if (pathname !== '/check-in') {
+        router.replace('/check-in');
+      }
+    }
+  }, [user, isLoading, isAdmin, pathname, router]);
 
   // Show loading only briefly, don't block if no auth configured
   if (isLoading && user === undefined) {
