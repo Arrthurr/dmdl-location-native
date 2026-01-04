@@ -1,10 +1,15 @@
-import { Tabs } from 'expo-router';
+import { Tabs, Redirect } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '@/contexts/AuthContext';
 
 export default function TabLayout() {
-  const { user } = useAuth();
+  const { user, isLoading } = useAuth();
   const _isAdmin = user?.role === 'administrator';
+
+  // Redirect to login if not authenticated
+  if (!isLoading && !user) {
+    return <Redirect href="/(auth)/login" />;
+  }
 
   return (
     <Tabs

@@ -1,15 +1,15 @@
 import * as AuthSession from 'expo-auth-session';
 import * as WebBrowser from 'expo-web-browser';
 import {
-  signInWithCredential,
-  OAuthProvider,
+  signInWithCustomToken,
   signOut as firebaseSignOut,
   onAuthStateChanged,
   User as FirebaseUser,
 } from 'firebase/auth';
-import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore';
+import { doc, getDoc } from 'firebase/firestore';
+import { httpsCallable } from 'firebase/functions';
 import Constants from 'expo-constants';
-import { auth, db } from './firebase';
+import { auth, db, functions } from './firebase';
 import { User, COLLECTIONS } from '@dmdl/shared';
 
 // Complete any pending auth session
@@ -64,71 +64,33 @@ export async function exchangeCodeForToken(
   return tokenResponse;
 }
 
-export async function signInWithMicrosoftToken(
-  idToken: string,
-  accessToken: string
-): Promise<FirebaseUser> {
-  const provider = new OAuthProvider('microsoft.com');
-  provider.setCustomParameters({
-    tenant: ENTRA_TENANT_ID || '',
-  });
+// Store for MS access token (for Graph API calls)
+let msAccessToken: string | null = null;
 
-  const credential = provider.credential({
-    idToken,
-    accessToken,
-  });
-
-  const userCredential = await signInWithCredential(auth, credential);
-
-  // Create or update user document
-  await ensureUserDocument(userCredential.user, accessToken);
-
-  return userCredential.user;
+export function getMicrosoftAccessToken(): string | null {
+  return msAccessToken;
 }
 
-async function ensureUserDocument(
-  firebaseUser: FirebaseUser,
+export async function signInWithMicrosoftToken(
+  _idToken: string,
   accessToken: string
-): Promise<void> {
-  try {
-    // Fetch user info from Microsoft Graph
-    const graphResponse = await fetch('https://graph.microsoft.com/v1.0/me', {
-      headers: { Authorization: `Bearer ${accessToken}` },
-    });
-    const graphUser = await graphResponse.json();
+): Promise<FirebaseUser> {
+  // Store the MS access token for later Graph API calls
+  msAccessToken = accessToken;
 
-    const userRef = doc(db, COLLECTIONS.USERS, firebaseUser.uid);
-    const userSnap = await getDoc(userRef);
+  // Call Cloud Function to verify token and get Firebase custom token
+  const signInWithMicrosoft = httpsCallable<
+    { accessToken: string },
+    { customToken: string; user: { uid: string; email: string; displayName: string } }
+  >(functions, 'signInWithMicrosoft');
 
-    if (!userSnap.exists()) {
-      // New user - create document with default provider role
-      await setDoc(userRef, {
-        id: firebaseUser.uid,
-        email: firebaseUser.email || graphUser.mail || graphUser.userPrincipalName,
-        displayName: graphUser.displayName || firebaseUser.displayName || 'Unknown',
-        role: 'provider', // Default role - admin can upgrade
-        entraId: graphUser.id,
-        photoUrl: firebaseUser.photoURL,
-        isActive: true,
-        createdAt: serverTimestamp(),
-        updatedAt: serverTimestamp(),
-      });
-    } else {
-      // Update existing user
-      await setDoc(
-        userRef,
-        {
-          displayName: graphUser.displayName || firebaseUser.displayName,
-          photoUrl: firebaseUser.photoURL,
-          updatedAt: serverTimestamp(),
-        },
-        { merge: true }
-      );
-    }
-  } catch (error) {
-    console.error('Error ensuring user document:', error);
-    // Don't throw - user can still use the app
-  }
+  const result = await signInWithMicrosoft({ accessToken });
+  const { customToken } = result.data;
+
+  // Sign in to Firebase with custom token
+  const userCredential = await signInWithCustomToken(auth, customToken);
+
+  return userCredential.user;
 }
 
 export async function getUserDocument(userId: string): Promise<User | null> {
@@ -152,6 +114,7 @@ export async function getUserDocument(userId: string): Promise<User | null> {
 }
 
 export async function signOut(): Promise<void> {
+  msAccessToken = null;
   await firebaseSignOut(auth);
 }
 

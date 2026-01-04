@@ -5,9 +5,9 @@ import {
   StyleSheet,
   TouchableOpacity,
   ActivityIndicator,
-  Image,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '@/contexts/AuthContext';
 
 export default function LoginScreen() {
@@ -57,11 +57,7 @@ export default function LoginScreen() {
               <ActivityIndicator color="#ffffff" />
             ) : (
               <>
-                <Image
-                  source={require('@/assets/microsoft-logo.png')}
-                  style={styles.microsoftLogo}
-                  resizeMode="contain"
-                />
+                <Ionicons name="logo-microsoft" size={20} color="#ffffff" style={styles.microsoftLogo} />
                 <Text style={styles.signInButtonText}>
                   Sign in with Microsoft
                 </Text>
@@ -147,8 +143,6 @@ const styles = StyleSheet.create({
     elevation: 4,
   },
   microsoftLogo: {
-    width: 20,
-    height: 20,
     marginRight: 12,
   },
   signInButtonText: {
