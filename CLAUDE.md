@@ -6,6 +6,15 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 DMDL Provider Locator is a geolocation-based check-in/check-out system for educational service providers. Providers check-in at assigned school locations within 150m radius; administrators manage providers, schools, schedules, and reports.
 
+## Current Status
+
+**Production-ready** - All core features implemented and tested.
+
+- 200 tests passing (shared: 75, mobile: 57, functions: 68)
+- TypeScript strict mode passes across all packages
+- Static export configured for Firebase Hosting
+- EAS builds configured for mobile distribution
+
 ## Development Commands
 
 ```bash
@@ -57,7 +66,13 @@ cd functions && npm run serve # Functions with emulator
 
 **Firestore Collections**: `USERS`, `SCHOOLS`, `SCHEDULES`, `ASSIGNMENTS`, `SESSIONS`, `LOCATION_CHECKS` (defined in `shared/src/constants/index.ts`)
 
-**Cloud Functions**: Callable functions with type-safe signatures. Location validation is server-side only (prevents spoofing). Key functions: `checkIn`, `checkOut`, `updateSessionNotes`, `autoCheckOutStale` (scheduled, 12-hour auto-checkout).
+**Cloud Functions**: Callable functions with type-safe signatures. Location validation is server-side only (prevents spoofing). Key functions:
+- `signInWithMicrosoft` - Entra ID token verification, user creation, custom token generation
+- `checkIn` - Validate location within radius, validate provider schedule, create session
+- `checkOut` - Complete session with duration calculation
+- `updateSessionNotes` - Update notes with permission checks (1000 char limit)
+- `generateSessionReport` - CSV export with date/provider/school filters
+- `autoCheckOutStale` - Scheduled function (every 15 min) for 12-hour auto-checkout
 
 **Geolocation**: 150m check-in radius, distance calculated server-side using Haversine formula. Mobile uses `expo-location` with background fetch for auto-checkout detection.
 
@@ -90,3 +105,24 @@ Required in `.env` (mobile), `.env.local` (web):
 - Build order: `shared` must be built before other packages (Turbo handles this via `^build`)
 - Path alias: Import shared types via `@dmdl/shared`
 - Node.js 20+ required
+
+## Shared Package (`@dmdl/shared`)
+
+**Types**: `User`, `School`, `Session`, `ScheduleSlot`, `GeoPoint`, `Assignment`
+
+**Utilities**:
+- `calculateDistance()` / `calculateDistanceBetweenPoints()` - Haversine formula
+- `isWithinRadius()` / `isWithinSchoolRadius()` - Distance validation
+- `formatDistance()` - "150m" or "1.5km" formatting
+- `formatDuration()` - "2h 30m" formatting
+- `generateGeohash()` - Geospatial hashing
+
+## Firestore
+
+**Indexes** (7 custom indexes in `firestore.indexes.json`):
+- Schools: `(isActive, name)`
+- Users: `(role, displayName)`
+- Schedules: Multiple indexes for day/time/provider queries
+- Sessions: `(userId, checkInTime)`, `(status, checkInTime)`
+
+**Security Rules**: Role-based access control. Providers access own sessions only; admins have full access.
