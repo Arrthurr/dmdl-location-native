@@ -111,8 +111,8 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
         }
 
         // Session will be updated via the snapshot listener
-      } catch (err: any) {
-        const message = err.message || 'Failed to check in';
+      } catch (err: unknown) {
+        const message = err instanceof Error ? err.message : 'Failed to check in';
         setError(message);
         throw new Error(message);
       } finally {
@@ -143,8 +143,8 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
         }
 
         // Session will be updated via the snapshot listener
-      } catch (err: any) {
-        const message = err.message || 'Failed to check out';
+      } catch (err: unknown) {
+        const message = err instanceof Error ? err.message : 'Failed to check out';
         setError(message);
         throw new Error(message);
       } finally {
@@ -163,8 +163,8 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
         >(functions, 'updateSessionNotes');
 
         await updateNotesFn({ sessionId, notes });
-      } catch (err: any) {
-        const message = err.message || 'Failed to update notes';
+      } catch (err: unknown) {
+        const message = err instanceof Error ? err.message : 'Failed to update notes';
         setError(message);
         throw new Error(message);
       }

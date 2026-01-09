@@ -24,7 +24,7 @@ describe('ActiveSessionBanner', () => {
     checkInLocation: { latitude: 40.7128, longitude: -74.006 },
     checkInDistanceMeters: 50,
     status: 'active',
-    deviceInfo: null,
+    deviceInfo: undefined,
     createdAt: new Date(),
     updatedAt: new Date(),
   };

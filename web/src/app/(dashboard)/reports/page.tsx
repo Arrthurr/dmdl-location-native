@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useCallback } from 'react';
-import { collection, query, where, orderBy, getDocs, Timestamp } from 'firebase/firestore';
+import { collection, query, where, orderBy, getDocs, Timestamp, QueryConstraint } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { useProviders } from '@/hooks/useProviders';
 import { useSchools } from '@/hooks/useSchools';
@@ -32,17 +32,17 @@ export default function ReportsPage() {
     message: string;
   } | null>(null);
 
-  const getProviderName = (providerId: string) => {
+  const getProviderName = useCallback((providerId: string) => {
     const provider = providers.find((p) => p.id === providerId);
     return provider?.displayName || 'Unknown';
-  };
+  }, [providers]);
 
-  const getSchoolName = (schoolId: string) => {
+  const getSchoolName = useCallback((schoolId: string) => {
     const school = schools.find((s) => s.id === schoolId);
     return school?.name || 'Unknown';
-  };
+  }, [schools]);
 
-  const generateCSV = (sessions: Session[]): string => {
+  const generateCSV = useCallback((sessions: Session[]): string => {
     const headers = [
       'Session ID',
       'Provider Name',
@@ -103,7 +103,7 @@ export default function ReportsPage() {
     ].join('\n');
 
     return csvContent;
-  };
+  }, [providers, getProviderName, getSchoolName]);
 
   const handleExport = useCallback(async () => {
     if (!db) {
@@ -127,7 +127,7 @@ export default function ReportsPage() {
 
     try {
       const sessionsRef = collection(db, COLLECTIONS.SESSIONS);
-      const constraints: any[] = [
+      const constraints: QueryConstraint[] = [
         where('checkInTime', '>=', Timestamp.fromDate(new Date(startDate))),
         where(
           'checkInTime',
@@ -194,7 +194,7 @@ export default function ReportsPage() {
     } finally {
       setIsExporting(false);
     }
-  }, [startDate, endDate, filterProvider, filterSchool, providers, schools]);
+  }, [startDate, endDate, filterProvider, filterSchool, generateCSV]);
 
   // Set default date range to current month
   const setThisMonth = () => {

@@ -10,6 +10,7 @@ import {
   onSnapshot,
   Timestamp,
   getDocs,
+  QueryConstraint,
 } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { Session, COLLECTIONS } from '@dmdl/shared';
@@ -30,6 +31,10 @@ export function useSessions(options: UseSessionsOptions = {}) {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  // Extract date timestamps for stable dependency comparison
+  const startDateTimestamp = startDate?.getTime();
+  const endDateTimestamp = endDate?.getTime();
+
   useEffect(() => {
     if (!db) {
       setIsLoading(false);
@@ -38,7 +43,7 @@ export function useSessions(options: UseSessionsOptions = {}) {
     }
 
     const sessionsRef = collection(db, COLLECTIONS.SESSIONS);
-    let constraints: any[] = [orderBy('checkInTime', 'desc'), limit(pageSize)];
+    let constraints: QueryConstraint[] = [orderBy('checkInTime', 'desc'), limit(pageSize)];
 
     if (providerId) {
       constraints = [where('userId', '==', providerId), ...constraints];
@@ -92,7 +97,7 @@ export function useSessions(options: UseSessionsOptions = {}) {
     );
 
     return unsubscribe;
-  }, [providerId, schoolId, startDate?.getTime(), endDate?.getTime(), status, pageSize]);
+  }, [providerId, schoolId, startDateTimestamp, endDateTimestamp, status, pageSize, startDate, endDate]);
 
   return { sessions, isLoading, error };
 }
@@ -113,7 +118,7 @@ export function useSessionsForExport(options: UseSessionsOptions = {}) {
     try {
       const { providerId, schoolId, startDate, endDate, status } = options;
       const sessionsRef = collection(db, COLLECTIONS.SESSIONS);
-      let constraints: any[] = [orderBy('checkInTime', 'desc')];
+      let constraints: QueryConstraint[] = [orderBy('checkInTime', 'desc')];
 
       if (providerId) {
         constraints = [where('userId', '==', providerId), ...constraints];

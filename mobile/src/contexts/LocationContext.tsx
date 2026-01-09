@@ -32,6 +32,7 @@ export function LocationProvider({ children }: { children: React.ReactNode }) {
   // Check permission status on mount
   useEffect(() => {
     checkPermissionStatus();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Start watching location when permission is granted

@@ -57,7 +57,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const { code } = response.params;
       handleAuthSuccess(code, request.codeVerifier);
     }
-  }, [response]);
+  }, [response, request?.codeVerifier]);
 
   const handleAuthSuccess = async (code: string, codeVerifier: string) => {
     try {

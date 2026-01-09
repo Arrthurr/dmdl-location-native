@@ -25,7 +25,7 @@ export default function SchoolsScreen() {
 
   useEffect(() => {
     requestPermission();
-  }, []);
+  }, [requestPermission]);
 
   const onRefresh = async () => {
     setRefreshing(true);
