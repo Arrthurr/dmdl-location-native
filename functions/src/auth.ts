@@ -1,5 +1,6 @@
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
+import { COLLECTIONS } from './utils/constants';
 
 const ENTRA_TENANT_ID = '31b9c0cb-a928-4266-b427-2820623d7f82';
 
@@ -99,7 +100,7 @@ export const signInWithMicrosoft = functions.https.onCall(
     console.log('Final firebaseUid:', firebaseUid);
 
     // Create or update Firestore user document
-    const userRef = admin.firestore().collection('USERS').doc(firebaseUid);
+    const userRef = admin.firestore().collection(COLLECTIONS.USERS).doc(firebaseUid);
     const userDoc = await userRef.get();
 
     if (!userDoc.exists) {

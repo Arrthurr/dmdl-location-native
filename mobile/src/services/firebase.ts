@@ -1,7 +1,10 @@
 import { initializeApp, getApps, getApp } from 'firebase/app';
 import { getFirestore } from 'firebase/firestore';
-import { getAuth } from 'firebase/auth';
+import { initializeAuth, getAuth } from 'firebase/auth';
+// @ts-expect-error - getReactNativePersistence is exported from @firebase/auth's react-native bundle
+import { getReactNativePersistence } from '@firebase/auth';
 import { getFunctions } from 'firebase/functions';
+import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
 import Constants from 'expo-constants';
 
 const firebaseConfig = {
@@ -17,7 +20,12 @@ const firebaseConfig = {
 const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
 
 export const db = getFirestore(app);
-export const auth = getAuth(app);
+// Initialize Auth with AsyncStorage persistence for React Native
+export const auth = getApps().length === 1
+  ? initializeAuth(app, {
+      persistence: getReactNativePersistence(ReactNativeAsyncStorage),
+    })
+  : getAuth(app);
 export const functions = getFunctions(app);
 
 export default app;
